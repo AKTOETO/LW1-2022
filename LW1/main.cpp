@@ -1,28 +1,28 @@
-#include<iostream>
-#include<ctime>
+п»ї#include <iostream>
+#include <ctime>
 #include <fstream>
 using namespace std;
 
-//упорядочная ф-ия по возрастанию
+//СѓРїРѕСЂСЏРґРѕС‡РЅР°СЏ С„-РёСЏ РїРѕ РІРѕР·СЂР°СЃС‚Р°РЅРёСЋ
 template<typename T>
 T f1(T x)
 {
-	//y=kx к - коэффициент
+	//y=kx Рє - РєРѕСЌС„С„РёС†РёРµРЅС‚
 	T k = 2;
 	return k * x;
 }
 
-//упорядочная ф-ия по убыванию
+//СѓРїРѕСЂСЏРґРѕС‡РЅР°СЏ С„-РёСЏ РїРѕ СѓР±С‹РІР°РЅРёСЋ
 template<typename T>
 T f2(T x)
 {
-	//y=kx+b к - коэффициент
+	//y=kx+b Рє - РєРѕСЌС„С„РёС†РёРµРЅС‚
 	T k = 2;
 	T b = 2;
 	return -k * x + b;
 }
 
-//случайная ф-ия
+//СЃР»СѓС‡Р°Р№РЅР°СЏ С„-РёСЏ
 template<typename T>
 T f3(T x)
 {
@@ -31,11 +31,11 @@ T f3(T x)
 	return x * k;
 }
 
-//частично упорядочная ф-ия
+//С‡Р°СЃС‚РёС‡РЅРѕ СѓРїРѕСЂСЏРґРѕС‡РЅР°СЏ С„-РёСЏ
 template<typename T>
 T f4(T x)
 {
-	//к - коэффициент
+	//Рє - РєРѕСЌС„С„РёС†РёРµРЅС‚
 	T k = 1;
 	T res = sin(x) * k;
 	return res;
