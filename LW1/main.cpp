@@ -4,7 +4,7 @@
 #include <cmath>
 using namespace std;
 
-//// ���������� ������� ���������� �������
+//// заполнение массива случайными числами
 //void random(double *arr)
 //{
 //	for (int i = 0; i < 200; i++)
@@ -21,7 +21,7 @@ void f1(T *arr)
 	for (int i = 0; i < 200; i++, j += 0.2)
 	{
 		arr[i] = j;
-	}
+}
 
 	//k, b - ������������
 	T k = 1;
@@ -41,7 +41,7 @@ void f2(T *arr)
 	for (int i = 0; i < 200; i++, j += 0.2)
 	{
 		arr[i] = j;
-	}
+}
 
 	//k, b - ������������
 	T k = 1;
@@ -63,14 +63,14 @@ void f3(T *arr)		//to do: ������� ���� ������
 	{
 		T k = T(rand() % 51 + (-25));
 		arr[i] = k; 
-	}
+}
 
 }
 
 //�������� ����������� �-��(�����)
 template<typename T>
 void f4(T *arr)
-{	
+{
 	double j = 0.0;
 	for (int i = 0; i < 200; i++, j += 0.2)
 	{
@@ -119,7 +119,6 @@ T f6(T x)
 	T res = asin(sin(x * a + c)) * b;
 	return res;
 }
-
 
 int main()
 {
