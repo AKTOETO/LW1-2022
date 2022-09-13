@@ -1,56 +1,159 @@
 ﻿#include <iostream>
 #include <ctime>
 #include <fstream>
+#include <cmath>
 using namespace std;
 
-//упорядочная ф-ия по возрастанию
-template<typename T>
-T f1(T x)
-{
-	//y=kx к - коэффициент
-	T k = 2;
-	return k * x;
-}
+//// ���������� ������� ���������� �������
+//void random(double *arr)
+//{
+//	for (int i = 0; i < 200; i++)
+//	{
+//		arr[i] = (rand() % 25 + 1) / double((rand() % 25 + 1));
+//	}
+//}
 
-//упорядочная ф-ия по убыванию
+//����������� �-�� �� �����������
 template<typename T>
-T f2(T x)
+void f1(T *arr)
 {
-	//y=kx+b к - коэффициент
-	T k = 2;
-	T b = 2;
-	return -k * x + b;
-}
+	double j = 0.0;
+	for (int i = 0; i < 200; i++, j += 0.2)
+	{
+		arr[i] = j;
+	}
 
-//случайная ф-ия
-template<typename T>
-T f3(T x)
-{
-	//k in [0,9]
-	T k = T(rand() % 10);
-	return x * k;
-}
-
-//частично упорядочная ф-ия
-template<typename T>
-T f4(T x)
-{
-	//к - коэффициент
+	//k, b - ������������
 	T k = 1;
-	T res = sin(x) * k;
+	T b = 0;
+
+	for (int i = 0; i < 200; i++)
+	{
+		arr[i] = k * arr[i] + b;
+	}
+}
+
+//����������� �-�� �� ��������
+template<typename T>
+void f2(T *arr)
+{
+	double j = 0.0;
+	for (int i = 0; i < 200; i++, j += 0.2)
+	{
+		arr[i] = j;
+	}
+
+	//k, b - ������������
+	T k = 1;
+	T b = 0;
+
+	for (int i = 0; i < 200; i++)
+	{
+		arr[i] = -k * arr[i] + b;
+	}
+}
+
+//��������� �-��
+template<typename T>
+void f3(T *arr)		//to do: ������� ���� ������
+{
+	//k ���������� �����������  [-25,25]
+
+	for (int i = 0; i < 200; i++)
+	{
+		T k = T(rand() % 51 + (-25));
+		arr[i] = k; 
+	}
+
+}
+
+//�������� ����������� �-��(�����)
+template<typename T>
+void f4(T *arr)
+{	
+	double j = 0.0;
+	for (int i = 0; i < 200; i++, j += 0.2)
+	{
+		arr[i] = j;
+	}
+
+	T a = 1; // �������
+	T c = 1; // ���������
+	T b = 1; // ����� ����
+
+	for (int i = 0; i < 200; i++)
+	{
+		arr[i] = sin(a * arr[i] + c) * b;
+	}
+
+}
+
+//�������� ����������� �-�� (����)
+template<typename T>
+void f5(T *arr)
+{
+	double j = 0.0;
+	for (int i = 0; i < 200; i++, j += 0.2)
+	{
+		arr[i] = j;
+	}
+
+	T a = 1; // �������
+	T c = 1; // ���������
+	T b = 1; // ����� ����
+
+	for (int i = 0; i < 200; i++)
+	{
+		arr[i] = asin(sin(arr[i] * a + c)) * b;
+	}
+
+}
+
+//�������� ����������� �-�� (�����������)
+template<typename T>
+T f6(T x)
+{
+	T a = 1; // �������
+	T c = 1; // ���������
+	T b = 1; // ����� ����
+	T res = asin(sin(x * a + c)) * b;
 	return res;
 }
+
+
 int main()
 {
 	ofstream out("out.txt");
 	srand(time(NULL));
 
-	double a[50];
-	double j = 0.0;
-	for (int i = 0; i < 50; i++, j += 0.2)
+	double* arr = new double[200];
+
+	////������������ ������
+	//f1(arr);
+
+	////��������� ������
+	//f2(arr);
+
+	////��������� ����
+	//f3(arr);
+
+	////���������
+	//f4(arr);
+
+	//����
+	f5(arr);
+
+	//// ������ �������
+	//for (int i = 0; i < 200; i++)
+	//{
+	//	cout << arr[i] << endl;
+	//}
+
+	// ������ ������ � ����
+	for (int i = 0; i < 200; i++)
 	{
-		a[i] = f1(j);
-		out << a[i] << '\n';
+		out << arr[i] << '\n';
 	}
+
 	out.close();
 }
