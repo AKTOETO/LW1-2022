@@ -3,16 +3,10 @@
 #include <ctime>
 #include <cmath>
 #include <iomanip>
+#include "gui/gui.hpp"	// для графиков
+						// (в финальной версии лабы
+						// можно будет удалить)
 using namespace std;
-
-//// заполнение массива случайными числами
-//void random(double *arr)
-//{
-//	for (int i = 0; i < 200; i++)
-//	{
-//		arr[i] = (rand() % 25 + 1) / double((rand() % 25 + 1));
-//	}
-//}
 
 // генерация рандомного вещественного числа
 // в интервале [min, max]
@@ -101,7 +95,7 @@ void f6(T* arr, int size)
 	int width = 20;		// длина одной ступени
 	double high = 0.3;	// высота одной ступени
 	double j = 0.0;		// координата y
-	
+
 	// координата j увеличивается на high (высоту шага),
 	// если по i (координата x) прошло ровно width значений
 	for (int i = 0; i < size; i++, j += ((i % width == 0) ? high : 0.0))
@@ -113,8 +107,7 @@ void f6(T* arr, int size)
 
 // печать массива в поток
 template<typename T>
-void print_arr(T* arr, int size,
-	basic_ofstream<char, char_traits<char>>& stream)
+void print_arr(T* arr, int size, ostream& stream)
 {
 	for (int i = 0; i < size; i++)
 	{
@@ -134,11 +127,13 @@ int main()
 	double* arrd = new double[size];
 	int* arri = new int[size];
 
-	//вызов генерации случайной функции
-	f1(arrd, size);
+	//вызов генерации 
+	f6(arrd, size);
 
 	// вывод массива
 	print_arr(arrd, size, out);
-
 	out.close();
+		
+	GUI::draw_graphs();
+	return 0;
 }
