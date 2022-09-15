@@ -95,7 +95,7 @@ namespace GUI
 		set.antialiasingLevel = 9;
 
 		// creating window
-		sf::RenderWindow window(sf::VideoMode(800, 600), "Graphs", sf::Style::Default, set);
+		sf::RenderWindow window(sf::VideoMode(W_WIDTH, W_HIGHT), "Graphs", sf::Style::Default, set);
 
 		// reading data from file
 		vector<double> y_coords = read_arr("out.txt");
@@ -120,9 +120,9 @@ namespace GUI
 		};
 
 		// print coords of points of line in console
-		for_each(line.begin(), line.end() - 1, [](sf::Vertex* line) {
+		/*for_each(line.begin(), line.end() - 1, [](sf::Vertex* line) {
 			cout << line[0].position.x << " " << line[0].position.y << endl;
-			});
+			});*/
 
 		// run the program as long as the window is open
 		while (window.isOpen())
