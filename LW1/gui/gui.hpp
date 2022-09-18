@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <iostream>
 #include <cmath>
+#include <map>
 
 using namespace std;
 
@@ -22,6 +23,8 @@ using namespace std;
 // множитель по оси y
 #define Y_SCALE (W_HIGHT / 2 - Y_BORDERS) / abs_max(y_coords)
 
+#define DRAW GUI::draw_graphs();
+
 namespace GUI
 {
 	//	=============================
@@ -34,6 +37,12 @@ namespace GUI
 
 	// reading data from file
 	inline vector<double> read_arr(string filename = "out.txt");
+
+	// looking for absolute max value
+	inline double abs_max(vector<double> vec);
+
+	// creating lines
+	inline vector<sf::Vertex*> create_lines(string filename = "f1.txt");
 
 	// drawing graphs
 	inline void draw_graphs();
@@ -68,8 +77,6 @@ namespace GUI
 			// read number 
 			fin >> temp;
 			fin.get();
-			// converting temp from string to int
-			// and pushing it into vector
 			out.push_back(temp);
 		} while (fin.peek() != EOF);
 
@@ -87,6 +94,50 @@ namespace GUI
 		return *max_element(vec.begin(), vec.end());
 	}
 
+	// creating lines
+	inline vector<sf::Vertex*> create_lines(string filename)
+	{
+		// reading data from file
+		vector<double> y_coords = read_arr(filename);
+
+		// creating line
+		vector<sf::Vertex*> line(y_coords.size());
+
+		// colors
+		//White;
+		//Magenta; 
+		//Red;
+		//Green;
+		//Blue;
+		//Yellow;
+		map<int, sf::Color> colors =
+		{
+			{1, sf::Color::White},
+			{2, sf::Color::Magenta},
+			{3, sf::Color::Red},
+			{4, sf::Color::Green},
+			{5, sf::Color::Blue},
+			{6, sf::Color::Yellow},
+		};
+
+		double xcoord = 0.0;
+		for (int i = 0; i < y_coords.size() - 1; i++, xcoord += X_STEP)
+		{
+			line[i] = new sf::Vertex[2];
+			// координаты начала отрезка
+			line[i][0] = sf::Vertex(
+				sf::Vector2f(xcoord * X_SCALE, -y_coords[i] * Y_SCALE + Y_SHIFT),
+				colors[filename[1] - '0']
+			);
+			// координаты конца отрезка отрезка
+			line[i][1] = sf::Vertex(
+				sf::Vector2f((xcoord + X_STEP) * X_SCALE, -y_coords[i + 1] * Y_SCALE + Y_SHIFT),
+				colors[filename[1] - '0']
+			);
+		};
+		return line;
+	}
+
 	// drawing graphs
 	inline void draw_graphs()
 	{
@@ -97,34 +148,29 @@ namespace GUI
 		// creating window
 		sf::RenderWindow window(sf::VideoMode(W_WIDTH, W_HIGHT), "Graphs", sf::Style::Default, set);
 
-		// reading data from file
-		vector<double> y_coords = read_arr("out.txt");
-
-		// creating line
-		vector<sf::Vertex*> line(y_coords.size());
-
-		double xcoord = 0.0;
-		for (int i = 0; i < y_coords.size() - 1; i++, xcoord += X_STEP)
+		// graphs
+		vector<vector<sf::Vertex*>> graphs(6);
+		vector<string> filenames =
 		{
-			line[i] = new sf::Vertex[2];
-			// координаты начала отрезка
-			line[i][0] = sf::Vertex(
-				sf::Vector2f(xcoord * X_SCALE, - y_coords[i] * Y_SCALE + Y_SHIFT),
-				sf::Color::White
-			);
-			// координаты конца отрезка отрезка
-			line[i][1] = sf::Vertex(
-				sf::Vector2f((xcoord + X_STEP) * X_SCALE, - y_coords[i + 1] * Y_SCALE + Y_SHIFT),
-				sf::Color::White
-			);
+			"f1.txt",
+			"f2.txt",
+			"f3.txt",
+			"f4.txt",
+			"f5.txt",
+			"f6.txt"
 		};
+		for (int i = 0; i < graphs.size(); i++)
+		{
+			graphs[i] = create_lines(filenames[i]);
+		}
+
 
 		// print coords of points of line in console
 		/*for_each(line.begin(), line.end() - 1, [](sf::Vertex* line) {
 			cout << line[0].position.x << " " << line[0].position.y << endl;
 			});*/
 
-		// run the program as long as the window is open
+			// run the program as long as the window is open
 		while (window.isOpen())
 		{
 			// check all the window's events that were triggered since the last iteration of the loop
@@ -139,9 +185,12 @@ namespace GUI
 			window.clear();
 
 			// draw
-			for (int i = 0; i < y_coords.size(); i++)
+			for (int j = 0; j < 6; j++)
 			{
-				window.draw(line[i], 2, sf::Lines);
+				for (int i = 0; i < graphs[0].size(); i++)
+				{
+					window.draw(graphs[j][i], 2, sf::Lines);
+				}
 			}
 
 			window.display();

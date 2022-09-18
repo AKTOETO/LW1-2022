@@ -51,12 +51,10 @@ template<typename T>
 void f3(T* arr, int size)		//to do: чота тут было, но чо-хз
 {
 	//k изменяется в интервале [-25,25]
-	double j = 0.0; // координата y
 	for (int i = 0; i < size; i++)
 	{
 		arr[i] = rand_double(-25, 25);
 	}
-
 }
 
 // синусоидальная функция
@@ -118,22 +116,69 @@ void print_arr(T* arr, int size, ostream& stream)
 
 int main()
 {
-	ofstream out("out.txt");
+	setlocale(LC_ALL, "ru");
+
 	srand(time(NULL));
+
+	// тип массива
+	int type;
+	cout << "Выберите тип данных массива:\n\t1.int\n\t2.double\n";
+	cin >> type;
 
 	// размер массива
 	int size = 200;
 
-	double* arrd = new double[size];
-	int* arri = new int[size];
+	// массив
+	int* arr_i = new int[size];
+	// массив
+	double* arr_d = new double[size];
 
-	//вызов генерации 
-	f6(arrd, size);
+	// массив указателей на функции типа int
+	void (*funcs_i[])(int*, int) = { f1,f2,f3,f4,f5,f6 };
 
-	// вывод массива
-	print_arr(arrd, size, out);
-	out.close();
-		
-	GUI::draw_graphs();
+	// массив указателей на функции типа double
+	void (*funcs_d[])(double*, int) = { f1,f2,f3,f4,f5,f6 };
+
+	// имена файлов
+	char name_of_file[6][7] =
+	{
+		"f1.txt",
+		"f2.txt",
+		"f3.txt",
+		"f4.txt",
+		"f5.txt",
+		"f6.txt"
+	};
+	
+	// запуск всех функций
+	for (int i = 0; i < 6; i++)
+	{
+		// файл вывода данных
+		ofstream out(name_of_file[i]);
+
+		// выбор типа данных
+		switch (type)
+		{
+			// если был выбран int
+		case 1:
+			funcs_i[i](arr_i, size);
+			
+			// печать массива в файл
+			print_arr(arr_i, size, out);
+			break;
+			// если был выбран double
+		case 2:
+			funcs_d[i](arr_d, size);
+			
+			// печать массива в файл
+			print_arr(arr_d, size, out);
+			break;
+		}
+
+		// закрытие файлового потока
+		out.close();
+	}	
+	// отрисовка графиков
+	DRAW
 	return 0;
 }
