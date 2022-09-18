@@ -18,7 +18,7 @@ using namespace std;
 // А - массив с координатами по y
 #define X_STEP 0.2										// шаг по оси x (0.2)
 #define Y_SHIFT W_HIGHT / 2								// смещение графика по оси y (px)
-#define X_SCALE W_WIDTH / X_STEP / y_coords.size()		// множитель по оси x
+#define X_SCALE W_WIDTH / X_STEP / (y_coords.size()-1)		// множитель по оси x
 #define Y_BORDERS 50									// отступ по оси y от рамок (px)
 // множитель по оси y
 #define Y_SCALE (W_HIGHT / 2 - Y_BORDERS) / abs_max(y_coords)

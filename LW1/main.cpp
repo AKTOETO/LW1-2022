@@ -3,6 +3,7 @@
 #include <ctime>
 #include <cmath>
 #include <iomanip>
+#include <chrono>
 #include "gui/gui.hpp"	// для графиков
 						// (в финальной версии лабы
 						// можно будет удалить)
@@ -48,10 +49,11 @@ void f2(T* arr, int size)
 
 // случайная ф-ия
 template<typename T>
-void f3(T* arr, int size)		//to do: чота тут было, но чо-хз
+void f3(T* arr, int size)
 {
-	//k изменяется в интервале [-25,25]
-	for (int i = 0; i < size; i++)
+	//i изменяется в интервале [-25,25]
+	double j = 0.0;
+	for (int i = 0; i < size; i++, j += 0.2)
 	{
 		arr[i] = rand_double(-25, 25);
 	}
@@ -114,33 +116,64 @@ void print_arr(T* arr, int size, ostream& stream)
 	}
 }
 
-int main()
+// проверка и ввод размера массива
+int size_of_arr()
 {
-	setlocale(LC_ALL, "ru");
-
-	srand(time(NULL));
-
-	// тип массива
-	int type;
-	cout << "Выберите тип данных массива:\n\t1.int\n\t2.double\n";
-	cin >> type;
-
 	// размер массива
-	int size = 200;
+	int size;
+	cout << "Введите размер массива [0,1000]:\n";
+	cin >> size;
 
-	// массив
-	int* arr_i = new int[size];
-	// массив
-	double* arr_d = new double[size];
+	// если было введено не то
+	if (size > 1000 || size < 0) {
+		cout << "Должна быть введено значение в интервале [0,1000]\n";
+		// если была введена не цифра
+		if (cin.fail()) {
+			cin.clear();
+			cin.ignore(INT_MAX, '\n');
+		}
+		system("cls");
+		size = size_of_arr();
+	}
+	return size;
+}
 
-	// массив указателей на функции типа int
-	void (*funcs_i[])(int*, int) = { f1,f2,f3,f4,f5,f6 };
+// ввод и проверка значений
+int input_and_check(int min, int max,
+	const char* welcome_str, const char* err_str)
+{
+	// размер массива
+	int num;
+	cout << welcome_str;
+	cin >> num;
 
-	// массив указателей на функции типа double
-	void (*funcs_d[])(double*, int) = { f1,f2,f3,f4,f5,f6 };
+	// если было введено не то
+	if (num > max || num < min) {
+		// если была введена не цифра
+		if (cin.fail()) {
+			cin.clear();
+			cin.ignore(INT_MAX, '\n');
+		}
+		system("cls");
+		cout << err_str;
+		num = input_and_check(min, max, welcome_str, err_str);
+	}
+	return num;
+}
+
+// создание массивов и вывод их в файлы
+template<typename T>
+void creating_arrays(int size)
+{
+	// массивы
+	T* arr = new T[size];
+	//double* arr_d = new double[size];
+
+	// массив указателей на функции
+	void (*funcs[])(T*, int) = { f1,f2,f3,f4,f5,f6 };
 
 	// имена файлов
-	char name_of_file[6][7] =
+	const char name_of_file[6][7] =
 	{
 		"f1.txt",
 		"f2.txt",
@@ -149,36 +182,65 @@ int main()
 		"f5.txt",
 		"f6.txt"
 	};
-	
+
 	// запуск всех функций
 	for (int i = 0; i < 6; i++)
 	{
 		// файл вывода данных
 		ofstream out(name_of_file[i]);
 
-		// выбор типа данных
-		switch (type)
-		{
-			// если был выбран int
-		case 1:
-			funcs_i[i](arr_i, size);
-			
-			// печать массива в файл
-			print_arr(arr_i, size, out);
-			break;
-			// если был выбран double
-		case 2:
-			funcs_d[i](arr_d, size);
-			
-			// печать массива в файл
-			print_arr(arr_d, size, out);
-			break;
-		}
+		// начало отсчета времени
+		auto begin = std::chrono::steady_clock::now();
+
+		// вызов формирующей функции
+		funcs[i](arr, size);;
+
+		// конец отсчета времени
+		auto end = std::chrono::steady_clock::now();
+
+		// вывод в консоль времени работы программы
+		auto elapsed_ms = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
+		cout << "\tВремя выполнения " << i + 1 << " функции = " <<
+			fixed << setw(5) << elapsed_ms.count() << " (нс)\n";
+
+		// печать массива в файл
+		print_arr(arr, size, out);
 
 		// закрытие файлового потока
 		out.close();
-	}	
+	}
+}
+
+int main()
+{
+	setlocale(LC_ALL, "ru");
+
+	srand(time(NULL));
+
+	// тип массива (int или double)
+	int type = input_and_check(1, 2,
+		"Выберите тип данных массива [1,2]:\n\t1.int\n\t2.double\n",
+		"Должна быть введена 1 или 2\n");
+
+	// размер массива
+	int size = input_and_check(0, 1000,
+		"Введите размер массива [0,1000]:\n",
+		"Должна быть введено значение в интервале [0,1000]\n");
+
+	switch (type)
+	{
+		// если был выбран int
+	case 1:
+		creating_arrays<int>(size);
+		break;
+
+		// если был выбран double
+	case 2:
+		creating_arrays<double>(size);
+		break;
+	}
+
 	// отрисовка графиков
 	DRAW
-	return 0;
+		return 0;
 }
