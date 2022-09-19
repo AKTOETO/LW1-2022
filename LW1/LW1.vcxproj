@@ -127,11 +127,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="gui\Curve.cpp" />
+    <ClCompile Include="gui\CurveManager.cpp" />
+    <ClCompile Include="gui\GraphsDrawer.cpp" />
     <ClCompile Include="gui\gui.hpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="gui\Curve.h" />
+    <ClInclude Include="gui\CurveManager.h" />
+    <ClInclude Include="gui\GraphsDrawer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

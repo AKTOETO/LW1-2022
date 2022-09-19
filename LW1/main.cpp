@@ -4,7 +4,7 @@
 #include <cmath>
 #include <iomanip>
 #include <chrono>
-#include "gui/gui.hpp"	// для графиков
+#include "gui/GraphsDrawer.h"	// для графиков
 						// (в финальной версии лабы
 						// можно будет удалить)
 using namespace std;
@@ -173,14 +173,14 @@ void creating_arrays(int size)
 	void (*funcs[])(T*, int) = { f1,f2,f3,f4,f5,f6 };
 
 	// имена файлов
-	const char name_of_file[6][7] =
+	const char name_of_file[6][13] =
 	{
-		"f1.txt",
-		"f2.txt",
-		"f3.txt",
-		"f4.txt",
-		"f5.txt",
-		"f6.txt"
+		"files/f1.txt",
+		"files/f2.txt",
+		"files/f3.txt",
+		"files/f4.txt",
+		"files/f5.txt",
+		"files/f6.txt"
 	};
 
 	// запуск всех функций
@@ -241,6 +241,9 @@ int main()
 	}
 
 	// отрисовка графиков
-	DRAW
-		return 0;
+	//DRAW
+	GraphsDrawer gd;
+	gd.run();
+
+	return 0;
 }
