@@ -1,9 +1,9 @@
 ﻿#include "Curve.h"
 
 curve::curve(RenderWindow* window, Color color,
-	string filename, double x_step, double y_borders)
+	string filename, double x_step, double y_borders_offset)
 	:m_window(window), m_color(color), m_filename(filename),
-	m_X_STEP(x_step), m_Y_BORDERS_OFFSET(y_borders)
+	m_X_STEP(x_step), m_Y_BORDERS_OFFSET(y_borders_offset)
 {
 	configurate();
 }
@@ -12,7 +12,7 @@ curve::~curve()
 {
 }
 
-void curve::set_coords()
+void curve::calculate_coords()
 {
 	double x_coord = 0.0;
 	m_curve.resize(m_y_coords.size());
@@ -42,7 +42,7 @@ void curve::configurate()
 	setting();
 
 	// setting coords of line up
-	set_coords();
+	calculate_coords();
 }
 
 double curve::abs_max(vector<double> vec) const
@@ -77,10 +77,39 @@ void curve::setting()
 	m_Y_SCALE = (m_window->getSize().y / 2 - m_Y_BORDERS_OFFSET) / abs_max(m_y_coords);
 }
 
+void curve::set_y_scale(double scale)
+{
+	m_Y_SCALE = scale;
+	calculate_coords();
+}
+
+void curve::set_y_border_offset(double offset)
+{
+	m_Y_BORDERS_OFFSET = offset;
+	setting();
+	calculate_coords();
+}
+
+double curve::get_y_scale() const
+{
+	return m_Y_SCALE;
+}
+
 void curve::draw() const
 {
 	for (int i = 0; i < m_curve.size(); i++)
 	{
 		m_window->draw(m_curve[i], 2, Lines);
 	}
+}
+
+string curve::info() const
+{
+	return
+		"\tfilename: " + m_filename +
+		"\n\tx step: " + to_string(m_X_STEP) +
+		"\n\tx scale: " + to_string(m_X_SCALE) +
+		"\n\ty shift: " + to_string(m_Y_SHIFT) +
+		"\n\ty scale: " + to_string(m_Y_SCALE) +
+		"\n";
 }

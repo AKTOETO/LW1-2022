@@ -29,24 +29,33 @@ private:
 
 public:
 	// coords
-	curve(RenderWindow*, Color = Color::White,
-		string = "f1.txt", double = 0.2, double = 50);
+	curve(RenderWindow* window, Color = Color::White,
+		string filename = "f1.txt", double x_step  = 0.2,
+		double y_borders_offset = 50);
 	~curve();
 
 	// configurate
 	void configurate();
+	// calculating coords
+	void calculate_coords();
 
 	// looking for absolute max value
 	double abs_max(vector<double>) const;
 
 	// set methods
-	void set_coords();
+	void set_y_scale(double);
+	void set_y_border_offset(double);
 	void setting();
+
+	// get methods
+	double get_y_scale() const;
 
 	// read from file
 	void read_data();
 
 	// draw
 	void draw() const;
+
+	string info() const;
 };
 

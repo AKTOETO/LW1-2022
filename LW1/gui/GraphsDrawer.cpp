@@ -1,4 +1,4 @@
-#include "GraphsDrawer.h"
+﻿#include "GraphsDrawer.h"
 
 GraphsDrawer::GraphsDrawer()
 :m_w_title("Graphs"), m_w_width(800),m_w_hight(600)
@@ -18,7 +18,7 @@ GraphsDrawer::~GraphsDrawer()
 	delete m_curve_manager;
 }
 
-void GraphsDrawer::run()
+void GraphsDrawer::draw()
 {
 	while (m_window->isOpen())
 	{
@@ -28,7 +28,7 @@ void GraphsDrawer::run()
 		{
 
 			if (event.type == sf::Event::Closed ||
-				event.type == sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+				sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 			{
 				m_window->close();
 			}

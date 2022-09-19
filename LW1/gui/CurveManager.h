@@ -39,6 +39,15 @@ public:
 
 	~CurveManager();
 
+	//set methods
+	void set_all_y_scale(double);
+	void set_all_y_border_offset(double);
+	
+	// get method
+	double get_min_y_scale() const;
+
 	void draw() const;
+
+	void info() const;
 };
 
