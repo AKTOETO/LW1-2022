@@ -130,7 +130,6 @@
     <ClCompile Include="gui\Curve.cpp" />
     <ClCompile Include="gui\CurveManager.cpp" />
     <ClCompile Include="gui\GraphsDrawer.cpp" />
-    <ClCompile Include="gui\gui.hpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

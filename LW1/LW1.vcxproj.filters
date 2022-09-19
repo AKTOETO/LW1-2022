@@ -18,9 +18,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="gui\gui.hpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="gui\GraphsDrawer.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
