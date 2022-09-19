@@ -14,13 +14,11 @@ CurveManager::CurveManager(RenderWindow* window,
 			m_window,		// window
 			m_color[i],		// color
 			m_filenames[i],	// filename
-			0.2,			// x step
-			0				// y borders offset
+			20				// y borders offset
 		);		
 	}
 
 	set_all_y_scale(get_min_y_scale());
-	//set_all_y_border_offset(0.0);
 
 	//info();
 }

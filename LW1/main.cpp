@@ -37,6 +37,7 @@
 *																		*
 \***********************************************************************/
 
+#define _USE_MATH_DEFINES	// для PI
 
 #include <iostream>
 #include <fstream>
@@ -45,6 +46,7 @@
 #include <iomanip>
 #include <chrono>
 #include "gui/GraphsDrawer.h"	// для отрисовки графиков
+
 
 using namespace std;
 
@@ -58,42 +60,43 @@ double rand_double(double min, double max);
 
 // упорядочная ф-ия по возрастанию
 template<typename T>
-void f1(T* arr, int size);
+void f1(T* arr, int size, double max, double step);
 
 // упорядочная ф-ия по убыванию
 template<typename T>
-void f2(T* arr, int size);
+void f2(T* arr, int size, double max, double step);
 
 // случайная ф-ия
 template<typename T>
-void f3(T* arr, int size);
+void f3(T* arr, int size, double max, double step);
 
 // синусоидальная функция
 template<typename T>
-void f4(T* arr, int size);
+void f4(T* arr, int size, double max, double step);
 
 // пилообразная функция
 template<typename T>
-void f5(T* arr, int size);
+void f5(T* arr, int size, double max, double step);
 
 // ступенчатая функция
 template<typename T>
-void f6(T* arr, int size);
+void f6(T* arr, int size, double max, double step);
 
 // печать массива в поток
 template<typename T>
-void print_arr(T* arr, int size, ostream& stream);
+void print_arr(T* arr, int size, double step, ostream& stream);
 
 // ввод и проверка размера массива
 int size_of_arr();
 
 // ввод и проверка значений
-int input_and_check(int min, int max,
+template<typename T>
+T input_and_check(T min, T max,
 	const char* welcome_str, const char* err_str);
 
 // создание массивов и вывод их в файлы
 template<typename T>
-void creating_arrays(int size);
+void creating_arrays(int size, double max, double step);
 
 
 /****************************************************************
@@ -116,19 +119,29 @@ int main()
 	// размер массива, вводится через консоль
 	int size = input_and_check(0, 1000,
 		"Введите размер массива [0,1000]:\n",
-		"Должна быть введено значение в интервале [0,1000]\n");
+		"Должно быть введено значение в интервале [0,1000]\n");
+
+	double max_value = input_and_check(10, 1000,
+		"Введите максимальное значение по оси y [10,1000]:\n",
+		"Должно быть введено значение в интервале [10,1000]\n"
+	);
+
+	double x_step = input_and_check(0.01, 10.0,
+		"Введите величину шага по x [0.01, 10]:\n",
+		"Должно быть введено значение в интервале [0.01, 10] через точку, а не запятую\n"
+	);
 
 	// выбор типа массива
 	switch (type)
 	{
 		// если был выбран int
 	case 1:
-		creating_arrays<int>(size);
+		creating_arrays<int>(size, max_value, x_step);
 		break;
 
 		// если был выбран double
 	case 2:
-		creating_arrays<double>(size);
+		creating_arrays<double>(size, max_value, x_step);
 		break;
 	}
 
@@ -153,14 +166,14 @@ double rand_double(double min, double max)
 
 // упорядочная ф-ия по возрастанию
 template<typename T>
-void f1(T* arr, int size)
+void f1(T* arr, int size, double max, double step)
 {
 	//k, b - коэффициенты прямой
-	T k = 0.5;
+	T k = max / (step * size);
 	T b = 0;
 
 	double x = 0.0; // координата x
-	for (int i = 0; i < size; i++, x += 0.2)
+	for (int i = 0; i < size; i++, x += step)
 	{
 		arr[i] = k * x + b;
 	}
@@ -168,14 +181,14 @@ void f1(T* arr, int size)
 
 // упорядочная ф-ия по убыванию
 template<typename T>
-void f2(T* arr, int size)
+void f2(T* arr, int size, double max, double step)
 {
 	//k, b - коэффициенты прямой
-	T k = 0.5;
+	T k = max / (step * size);
 	T b = 0;
 
 	double x = 0.0; // координата x
-	for (int i = 0; i < size; i++, x += 0.2)
+	for (int i = 0; i < size; i++, x += step)
 	{
 		arr[i] = -k * x + b;
 	}
@@ -183,25 +196,25 @@ void f2(T* arr, int size)
 
 // случайная ф-ия
 template<typename T>
-void f3(T* arr, int size)
+void f3(T* arr, int size, double max, double step)
 {
 	//i изменяется в интервале [-25,25]
 	for (int i = 0; i < size; i++)
 	{
-		arr[i] = rand_double(-5, 5);
+		arr[i] = rand_double(-max, max);
 	}
 }
 
 // синусоидальная функция
 template<typename T>
-void f4(T* arr, int size)
+void f4(T* arr, int size, double max, double step)
 {
 	T x_scale = 1; // масштабирование по x
 	T x_shift = 1; // сдвиг по х
-	T y_scale = 5; // мастабирование по y
+	T y_scale = max; // мастабирование по y
 	double x = 0.0; // координата x
 
-	for (int i = 0; i < size; i++, x += 0.2)
+	for (int i = 0; i < size; i++, x += step)
 	{
 		arr[i] = sin(x_scale * x + x_shift) * y_scale;
 	}
@@ -209,26 +222,27 @@ void f4(T* arr, int size)
 
 // пилообразная функция
 template<typename T>
-void f5(T* arr, int size)
+void f5(T* arr, int size, double max, double step)
 {
 	T x_scale = 1;	// масштабирование по x
-	T x_shift = 1;	// сдвиг по х
-	T y_scale = 1;	// мастабирование по y
+	T x_shift = 0;	// сдвиг по х
+	T y_scale = max;	// мастабирование по y
 	double x = 0.0;	// координата x
 
-	for (int i = 0; i < size; i++, x += 0.2)
+	for (int i = 0; i < size; i++, x += step)
 	{
-		arr[i] = asin(sin(x * x_scale + x_shift)) * y_scale;
+		arr[i] = asin(sin(x * x_scale + x_shift)) * y_scale / M_PI_2;
 	}
 }
 
 // ступенчатая функция
 template<typename T>
-void f6(T* arr, int size)
+void f6(T* arr, int size, double max, double step)
 {
-	int step_length = 20;						// длина одной ступени
-	double step_height = step_length / 10.0;	// высота одной ступени
-	double rand_value = step_height / 10.0;		// значение для создания шума
+	int count_of_step = 5;						// количество ступеней
+	double step_height = max / count_of_step;	// высота одной ступени
+	int step_length = ceil(size * step);		// длина одной ступени
+	double rand_value = max / 10.0;				// значение для создания шума
 	double x = 0.0;								// координата x
 
 	// координата x увеличивается на step_height (высоту шага),
@@ -237,14 +251,18 @@ void f6(T* arr, int size)
 	{
 		// координата y + шум, зависящий от высоты шага
 		arr[i] = x + rand_double(-rand_value, rand_value);
-		//cout << "i: " << i << " x: " << x << endl;
 	}
 }
 
+
 // печать массива в поток
 template<typename T>
-void print_arr(T* arr, int size, ostream& stream)
+void print_arr(T* arr, int size, double step, ostream& stream)
 {
+	// вывод шага по x в файл
+	stream << step << endl;
+
+	// вывод координат массива
 	for (int i = 0; i < size; i++)
 	{
 		stream << fixed << setprecision(6)
@@ -275,11 +293,12 @@ int size_of_arr()
 }
 
 // ввод и проверка значений
-int input_and_check(int min, int max,
+template<typename T>
+T input_and_check(T min, T max,
 	const char* welcome_str, const char* err_str)
 {
 	// размер массива
-	int num;
+	T num;
 	cout << welcome_str;
 	cin >> num;
 
@@ -299,13 +318,13 @@ int input_and_check(int min, int max,
 
 // создание массивов и вывод их в файлы
 template<typename T>
-void creating_arrays(int size)
+void creating_arrays(int size, double max, double x_step)
 {
 	// массивы
 	T* arr = new T[size];
 
 	// массив указателей на функции
-	void (*funcs[])(T*, int) = { f1,f2,f3,f4,f5,f6 };
+	void (*funcs[])(T*, int, double, double) = { f1,f2,f3,f4,f5,f6 };
 
 	// имена файлов
 	const char name_of_file[6][13] =
@@ -328,7 +347,7 @@ void creating_arrays(int size)
 		auto begin = std::chrono::steady_clock::now();
 
 		// вызов формирующей функции
-		funcs[i](arr, size);;
+		funcs[i](arr, size, max, x_step);
 
 		// конец отсчета времени
 		auto end = std::chrono::steady_clock::now();
@@ -339,7 +358,7 @@ void creating_arrays(int size)
 			fixed << setw(5) << elapsed_ms.count() << " (нс)\n";
 
 		// печать массива в файл
-		print_arr(arr, size, out);
+		print_arr(arr, size, x_step, out);
 
 		// закрытие файлового потока
 		out.close();

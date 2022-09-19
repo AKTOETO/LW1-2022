@@ -1,9 +1,9 @@
 ﻿#include "Curve.h"
 
 curve::curve(RenderWindow* window, Color color,
-	string filename, double x_step, double y_borders_offset)
+	string filename, double y_borders_offset)
 	:m_window(window), m_color(color), m_filename(filename),
-	m_X_STEP(x_step), m_Y_BORDERS_OFFSET(y_borders_offset)
+	m_Y_BORDERS_OFFSET(y_borders_offset)
 {
 	configurate();
 }
@@ -57,6 +57,10 @@ void curve::read_data()
 	if (!fin.is_open())
 		cout << "file \"" << m_filename << "\" didn't open\n";
 
+	// read x_step from file
+	fin >> m_X_STEP;
+	fin.get();
+
 	//reading datafrom file
 	double temp;
 	do
@@ -107,7 +111,7 @@ string curve::info() const
 {
 	return
 		"\tfilename: " + m_filename +
-		"\n\tx step: " + to_string(m_X_STEP) +
+		"\n\tx step:  " + to_string(m_X_STEP) +
 		"\n\tx scale: " + to_string(m_X_SCALE) +
 		"\n\ty shift: " + to_string(m_Y_SHIFT) +
 		"\n\ty scale: " + to_string(m_Y_SCALE) +

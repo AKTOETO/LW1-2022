@@ -29,8 +29,10 @@ private:
 
 public:
 	// coords
-	curve(RenderWindow* window, Color = Color::White,
-		string filename = "f1.txt", double x_step  = 0.2,
+	curve(
+		RenderWindow* window,
+		Color = Color::White,
+		string filename = "f1.txt",
 		double y_borders_offset = 50);
 	~curve();
 
