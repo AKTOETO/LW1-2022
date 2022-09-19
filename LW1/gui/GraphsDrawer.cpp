@@ -18,7 +18,7 @@ GraphsDrawer::~GraphsDrawer()
 	delete m_curve_manager;
 }
 
-void GraphsDrawer::draw()
+void GraphsDrawer::run()
 {
 	while (m_window->isOpen())
 	{
@@ -26,13 +26,14 @@ void GraphsDrawer::draw()
 
 		while (m_window->pollEvent(event))
 		{
-
 			if (event.type == sf::Event::Closed ||
 				sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 			{
 				m_window->close();
 			}
 		}
+
+		m_curve_manager->logic();
 
 		m_window->clear();
 

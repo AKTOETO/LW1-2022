@@ -15,6 +15,6 @@ public:
 	GraphsDrawer();
 	~GraphsDrawer();
 
-	void draw();
+	void run();
 };
 

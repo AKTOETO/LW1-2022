@@ -3,7 +3,7 @@
 curve::curve(RenderWindow* window, Color color,
 	string filename, double y_borders_offset)
 	:m_window(window), m_color(color), m_filename(filename),
-	m_Y_BORDERS_OFFSET(y_borders_offset)
+	m_Y_BORDERS_OFFSET(y_borders_offset), m_visible(true)
 {
 	configurate();
 }
@@ -94,6 +94,11 @@ void curve::set_y_border_offset(double offset)
 	calculate_coords();
 }
 
+void curve::switch_visibility()
+{
+	m_visible += -1;
+}
+
 double curve::get_y_scale() const
 {
 	return m_Y_SCALE;
@@ -101,9 +106,13 @@ double curve::get_y_scale() const
 
 void curve::draw() const
 {
-	for (int i = 0; i < m_curve.size(); i++)
+	if (m_visible == 1)
 	{
-		m_window->draw(m_curve[i], 2, Lines);
+		//cout << "drawing\n";
+		for (int i = 0; i < m_curve.size(); i++)
+		{
+			m_window->draw(m_curve[i], 2, Lines);
+		}
 	}
 }
 

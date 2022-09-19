@@ -1,6 +1,6 @@
 #pragma once
 #include "Curve.h"
-
+#include "Button.h"
 const vector<string> FILENAMES =
 {
 	"files/f1.txt",
@@ -26,6 +26,7 @@ class CurveManager
 private:
 	RenderWindow* m_window;
 	vector<curve*> m_curves;
+	vector<Button*> m_buttons;
 
 	vector<Color> m_color;
 	vector<string> m_filenames;
@@ -47,6 +48,8 @@ public:
 	double get_min_y_scale() const;
 
 	void draw() const;
+
+	void logic();
 
 	void info() const;
 };

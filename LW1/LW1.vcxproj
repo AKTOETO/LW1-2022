@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="gui\Button.cpp" />
     <ClCompile Include="gui\Curve.cpp" />
     <ClCompile Include="gui\CurveManager.cpp" />
     <ClCompile Include="gui\GraphsDrawer.cpp" />
@@ -136,6 +137,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gui\Button.h" />
     <ClInclude Include="gui\Curve.h" />
     <ClInclude Include="gui\CurveManager.h" />
     <ClInclude Include="gui\GraphsDrawer.h" />

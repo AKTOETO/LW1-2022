@@ -27,6 +27,8 @@ private:
 		   
 	double m_Y_BORDERS_OFFSET;
 
+	bool m_visible;
+
 public:
 	// coords
 	curve(
@@ -43,6 +45,15 @@ public:
 
 	// looking for absolute max value
 	double abs_max(vector<double>) const;
+	// read from file
+	void read_data();
+	void switch_visibility();
+
+	// draw
+	void draw() const;
+
+	// getting info
+	string info() const;
 
 	// set methods
 	void set_y_scale(double);
@@ -52,12 +63,5 @@ public:
 	// get methods
 	double get_y_scale() const;
 
-	// read from file
-	void read_data();
-
-	// draw
-	void draw() const;
-
-	string info() const;
 };
 
