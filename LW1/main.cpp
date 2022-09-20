@@ -86,9 +86,6 @@ void f6(T* arr, int size, double max, double step);
 template<typename T>
 void print_arr(T* arr, int size, double step, ostream& stream);
 
-// ввод и проверка размера массива
-int size_of_arr();
-
 // ввод и проверка значений
 template<typename T>
 T input_and_check(T min, T max,
@@ -252,28 +249,7 @@ void print_arr(T* arr, int size, double step, ostream& stream)
 	}
 }
 
-// проверка и ввод размера массива
-int size_of_arr()
-{
-	// размер массива
-	int size;
-	cout << "Введите размер массива [0,1000]:\n";
-	cin >> size;
-
-	// если было введено не то
-	if (size > 1000 || size < 0) {
-		cout << "Должна быть введено значение в интервале [0,1000]\n";
-		// если была введена не цифра
-		if (cin.fail()) {
-			cin.clear();
-			cin.ignore(INT_MAX, '\n');
-		}
-		system("cls");
-		size = size_of_arr();
-	}
-	return size;
-}
-
+// первая часть
 void first_task()
 {
 	cout << "========= ПЕРВЫЙ ЭТАП =========\n";
@@ -324,6 +300,7 @@ void first_task()
 	cout << "== КОНЕЦ ПЕРВОГО ЭТАПА ==\n\n";
 }
 
+// втроая часть
 void second_task()
 {
 	cout << "========= ВТОРОЙ ЭТАП =========\n";
