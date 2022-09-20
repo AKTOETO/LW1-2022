@@ -96,7 +96,21 @@ T input_and_check(T min, T max,
 
 // создание массивов и вывод их в файлы
 template<typename T>
-void creating_arrays(int size, double max, double step);
+void creating_arrays(int size, double max, double step, bool _2nd_task);
+
+// решение первой задачи
+// массивы размером от 150 до 200
+// отрисовка графиков функций
+// есть вывод в файл данных массива
+void first_task();
+
+// вторая задача
+// массивы размером 5*10^5,10*10^5,50*10^5
+// отрисовки нет
+// вывода в файл нет
+// в консоли видно
+// время формирования последовательностей
+void second_task();
 
 
 /****************************************************************
@@ -111,43 +125,11 @@ int main()
 	// инициализация генератора случайных чисел
 	srand(time(NULL));
 
-	// тип массива (int или double), вводится через консоль
-	int type = input_and_check(1, 2,
-		"\nВыберите тип данных массива [1,2]:\n\t1.int\n\t2.double\n",
-		"Должна быть введена 1 или 2\n");
+	// выполнение первого этапа
+	first_task();
 
-	// размер массива, вводится через консоль
-	int size = input_and_check(0, 1000,
-		"\nВведите размер массива [0,1000]:\n",
-		"Должно быть введено значение в интервале [0,1000]\n");
-
-	double max_value = input_and_check(10, 1000,
-		"\nВведите максимальное значение по оси y [10,1000]:\n",
-		"Должно быть введено значение в интервале [10,1000]\n"
-	);
-
-	double x_step = input_and_check(0.01, 10.0,
-		"\nВведите величину шага по x [0.01, 10]:\n",
-		"Должно быть введено значение в интервале [0.01, 10] через точку, а не запятую\n"
-	);
-
-	// выбор типа массива
-	switch (type)
-	{
-		// если был выбран int
-	case 1:
-		creating_arrays<int>(size, max_value, x_step);
-		break;
-
-		// если был выбран double
-	case 2:
-		creating_arrays<double>(size, max_value, x_step);
-		break;
-	}
-
-	// отрисовка графиков
-	GraphsDrawer gd;
-	gd.run();
+	// выполнение второго этапа
+	second_task();
 
 	return 0;
 }
@@ -292,6 +274,97 @@ int size_of_arr()
 	return size;
 }
 
+void first_task()
+{
+	cout << "========= ПЕРВЫЙ ЭТАП =========\n";
+
+	// тип массива (int или double), вводится через консоль
+	int type = input_and_check(1, 2,
+		"\nВыберите тип данных массива [1,2]:\n\t1.int\n\t2.double\n",
+		"Должна быть введена 1 или 2\n");
+
+	// размер массива, вводится через консоль
+	int size = input_and_check(150, 200,
+		"\nВведите размер массива [150,200]:\n",
+		"Должно быть введено значение в интервале [150,200]\n");
+
+	double max_value = input_and_check(10, 1000,
+		"\nВведите максимальное значение по оси y [10,1000]:\n",
+		"Должно быть введено значение в интервале [10,1000]\n"
+	);
+
+	double x_step = input_and_check(0.01, 10.0,
+		"\nВведите величину шага по x [0.01, 10]:\n",
+		"Должно быть введено значение в интервале [0.01, 10] через точку, а не запятую\n"
+	);
+
+	// выбор типа массива
+	switch (type)
+	{
+		// если был выбран int
+	case 1:
+		creating_arrays<int>(size, max_value, x_step, 0);
+		break;
+
+		// если был выбран double
+	case 2:
+		creating_arrays<double>(size, max_value, x_step, 0);
+		break;
+	}
+
+	// отрисовка графиков
+	/*GraphsDrawer gd;
+	gd.window_active(0);
+	sf::Thread thread(&GraphsDrawer::run, &gd);
+	thread.launch();*/
+
+	GraphsDrawer gd;
+	gd.run();
+
+	cout << "== КОНЕЦ ПЕРВОГО ЭТАПА ==\n\n";
+}
+
+void second_task()
+{
+	cout << "========= ВТОРОЙ ЭТАП =========\n";
+
+	// тип массива (int или double), вводится через консоль
+	int type = input_and_check(1, 2,
+		"\nВыберите тип данных массива [1,2]:\n\t1.int\n\t2.double\n",
+		"Должна быть введена 1 или 2\n");
+
+	// размер массива, вводится через консоль
+	int size = input_and_check(500000, 5000000,
+		"\nВведите размер массива [500000,5000000]:\n",
+		"Должно быть введено значение в интервале [500000,5000000]\n");
+
+	double max_value = input_and_check(10, 1000,
+		"\nВведите максимальное значение по оси y [10,1000]:\n",
+		"Должно быть введено значение в интервале [10,1000]\n"
+	);
+
+	double x_step = input_and_check(0.01, 10.0,
+		"\nВведите величину шага по x [0.01, 10]:\n",
+		"Должно быть введено значение в интервале [0.01, 10] через точку, а не запятую\n"
+	);
+
+	// выбор типа массива
+	switch (type)
+	{
+		// если был выбран int
+	case 1:
+		creating_arrays<int>(size, max_value, x_step, 1);
+		break;
+
+		// если был выбран double
+	case 2:
+		creating_arrays<double>(size, max_value, x_step, 1);
+		break;
+	}
+
+	cout << "== КОНЕЦ ВТОРОГО ЭТАПА ==\n";
+}
+
 // ввод и проверка значений
 template<typename T>
 T input_and_check(T min, T max,
@@ -318,13 +391,18 @@ T input_and_check(T min, T max,
 
 // создание массивов и вывод их в файлы
 template<typename T>
-void creating_arrays(int size, double max, double x_step)
+void creating_arrays(int size, double max, double x_step, bool _2nd_task)
 {
 	// массивы
 	T* arr = new T[size];
 
 	// массив указателей на функции
-	void (*funcs[])(T*, int, double, double) = { f1,f2,f3,f4,f5,f6 };
+	void (*funcs[])(
+		T * arr,		// массив
+		int size,		// размер массива
+		double max_y,	// максимальное значение по y
+		double x_step	// шаг по x
+		) = { f1,f2,f3,f4,f5,f6 };
 
 	// имена файлов
 	const char name_of_file[6][13] =
@@ -358,10 +436,15 @@ void creating_arrays(int size, double max, double x_step)
 			fixed << setw(5) << elapsed_ms.count() << " (нс)\n";
 
 		// печать массива в файл
-		print_arr(arr, size, x_step, out);
+		if (!_2nd_task)
+			print_arr(arr, size, x_step, out);
+
 
 		// закрытие файлового потока
 		out.close();
 	}
+
+	// очистка памяти, занимаемой массивом
+	delete[] arr;
 }
 /**************** End Of main.cpp File ***************/

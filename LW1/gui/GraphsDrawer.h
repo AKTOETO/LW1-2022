@@ -15,6 +15,7 @@ public:
 	GraphsDrawer();
 	~GraphsDrawer();
 
+	void window_active(bool);
 	void run();
 };
 

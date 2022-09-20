@@ -18,8 +18,15 @@ GraphsDrawer::~GraphsDrawer()
 	delete m_curve_manager;
 }
 
+void GraphsDrawer::window_active(bool key)
+{
+	m_window->setActive(key);
+}
+
 void GraphsDrawer::run()
 {
+	window_active(1);
+
 	while (m_window->isOpen())
 	{
 		sf::Event event;
