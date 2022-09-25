@@ -147,7 +147,7 @@ void second_stage(
 void first_task();
 
 // вторая задача
-// массивы размером 5*10^5,10*10^5,50*10^5
+// массивы размером 5*10^5,10*10^5,...,50*10^5
 // отрисовки нет
 // вывода в файл нет
 // в консоли видно
@@ -248,7 +248,7 @@ void f4(T* arr, int size, double max, double step)
 template<typename T>
 void f5(T* arr, int size, double max, double step)
 {
-	T x_scale = 0.5;	// масштабирование по x
+	T x_scale = 1;	// масштабирование по x
 	T x_shift = 0;	// сдвиг по х
 	T y_scale = max;	// мастабирование по y
 	double x = 0.0;	// координата x
