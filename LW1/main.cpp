@@ -1,5 +1,5 @@
 ﻿/***********************************************************************\
-*                    кафедра № 304 2 курс 3 семестр информатика			*	
+*                    кафедра № 304 2 курс 3 семестр информатика			*
 *-----------------------------------------------------------------------*
 *	Project type : solution												*
 *	Project name : LW1													*
@@ -47,9 +47,7 @@
 #include <chrono>
 #include "gui/GraphsDrawer.h"	// для отрисовки графиков
 
-
 using namespace std;
-
 
 /****************************************************************
 *					   К О Н С Т А Н Т Ы						*
@@ -110,48 +108,48 @@ T input_and_check(T min, T max,
 // создание массивов и вывод их в файлы
 template<typename ARRAY_TYPE, typename TYPE_OF_TIME = chrono::nanoseconds>
 void creating_arrays(int size, double max, double x_step,
-	// (arr,size, x_step, func_num,  elapsed_ms)
-	void (*stage) (
-		ARRAY_TYPE* arr,
-		int size,
-		double x_step,
-		int func_num,
-		TYPE_OF_TIME elapsed_time
+	void (*stage) (		// функция, которая выводит данные
+		ARRAY_TYPE* arr,			// массив
+		int size,					// размер массива
+		double x_step,				// шаг по оси х
+		int func_num,				// номер функции
+		TYPE_OF_TIME elapsed_time	// тип времени (нс или мкС)
 		)
 );
 
 // функция обработки массивов для первого этапа работы
+// она нажна для корректоного вывода данных
 template<typename ARRAY_TYPE, typename TYPE_OF_TIME = chrono::nanoseconds>
 void first_stage(
-	ARRAY_TYPE* arr,
-	int size,
-	double x_step,
-	int func_num,
-	TYPE_OF_TIME elapsed_time
+	ARRAY_TYPE* arr,			// массив
+	int size,					// размер массива
+	double x_step,				// шаг по оси х
+	int func_num,				// номер функции
+	TYPE_OF_TIME elapsed_time	// тип времени (нс или мкС)
 );
 
 // функция обработки массивов для второго этапа работы
+// она нажна для корректоного вывода данных
 template<typename ARRAY_TYPE, typename TYPE_OF_TIME = chrono::microseconds>
 void second_stage(
-	ARRAY_TYPE* arr,
-	int size,
-	double x_step,
-	int func_num,
-	TYPE_OF_TIME elapsed_time
+	ARRAY_TYPE* arr,			// массив
+	int size,					// размер массива
+	double x_step,				// шаг по оси х
+	int func_num,				// номер функции
+	TYPE_OF_TIME elapsed_time	// тип времени (нс или мкС)
 );
 
 // решение первой задачи
-// массивы размером от 150 до 200
-// отрисовка графиков функций
-// есть вывод в файл данных массива
+// - массивы размером от 150 до 200
+// - отрисовка графиков функций
+// - есть вывод в файл данных массива
 void first_task();
 
 // вторая задача
-// массивы размером 5*10^5,10*10^5,...,50*10^5
-// отрисовки нет
-// вывода в файл нет
-// в консоли видно
-// время формирования последовательностей
+// - массивы размером 5*10^5,10*10^5,...,50*10^5
+// - отрисовки нет
+// - вывода в файл нет
+// - в консоли видно время формирования последовательностей
 void second_task();
 
 
@@ -171,7 +169,7 @@ int main()
 	first_task();
 
 	// выполнение второго этапа
-	second_task();
+	//second_task();
 
 	return 0;
 }
@@ -188,41 +186,44 @@ double rand_double(double min, double max)
 	return min + f * (max - min);
 }
 
-// упорядочная ф-ия по возрастанию
+// упорядочная функция по возрастанию
 template<typename T>
 void f1(T* arr, int size, double max, double step)
 {
 	//k, b - коэффициенты прямой
 	T k = max / (step * size);
 	T b = 0;
-
 	double x = 0.0; // координата x
+
+	// заполнение массива 
 	for (int i = 0; i < size; i++, x += step)
 	{
 		arr[i] = k * x + b;
 	}
 }
 
-// упорядочная ф-ия по убыванию
+// упорядочная функция по убыванию
 template<typename T>
 void f2(T* arr, int size, double max, double step)
 {
 	//k, b - коэффициенты прямой
 	T k = max / (step * size);
 	T b = 0;
-
 	double x = 0.0; // координата x
+
+	// заполнение массива 
 	for (int i = 0; i < size; i++, x += step)
 	{
 		arr[i] = -k * x + b;
 	}
 }
 
-// случайная ф-ия
+// случайная функция
 template<typename T>
 void f3(T* arr, int size, double max, double step)
 {
-	//i изменяется в интервале [-25,25]
+	// заполнение массива 
+	// i изменяется в интервале [-max,max]
 	for (int i = 0; i < size; i++)
 	{
 		arr[i] = rand_double(-max, max);
@@ -233,11 +234,12 @@ void f3(T* arr, int size, double max, double step)
 template<typename T>
 void f4(T* arr, int size, double max, double step)
 {
-	T x_scale = 1; // масштабирование по x
-	T x_shift = 1; // сдвиг по х
-	T y_scale = max; // мастабирование по y
-	double x = 0.0; // координата x
+	T x_scale = 1;		// масштабирование по x
+	T x_shift = 1;		// сдвиг по х
+	T y_scale = max;	// мастабирование по y
+	double x = 0.0;		// координата x
 
+	// заполнение массива 
 	for (int i = 0; i < size; i++, x += step)
 	{
 		arr[i] = sin(x_scale * x + x_shift) * y_scale;
@@ -248,11 +250,12 @@ void f4(T* arr, int size, double max, double step)
 template<typename T>
 void f5(T* arr, int size, double max, double step)
 {
-	T x_scale = 1;	// масштабирование по x
-	T x_shift = 0;	// сдвиг по х
+	T x_scale = 1;		// масштабирование по x
+	T x_shift = 0;		// сдвиг по х
 	T y_scale = max;	// мастабирование по y
-	double x = 0.0;	// координата x
+	double x = 0.0;		// координата x
 
+	// заполнение массива 
 	for (int i = 0; i < size; i++, x += step)
 	{
 		arr[i] = asin(sin(x * x_scale + x_shift)) * y_scale / M_PI_2;
