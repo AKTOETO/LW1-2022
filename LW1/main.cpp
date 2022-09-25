@@ -50,6 +50,22 @@
 
 using namespace std;
 
+
+/****************************************************************
+*					   К О Н С Т А Н Т Ы						*
+****************************************************************/
+
+// имена файлов
+const char name_of_file[6][13] =
+{
+	"files/f1.txt",
+	"files/f2.txt",
+	"files/f3.txt",
+	"files/f4.txt",
+	"files/f5.txt",
+	"files/f6.txt"
+};
+
 /****************************************************************
 *              П Р О Т О Т И П Ы   Ф У Н К Ц И Й                *
 ****************************************************************/
@@ -92,8 +108,37 @@ T input_and_check(T min, T max,
 	const char* welcome_str, const char* err_str);
 
 // создание массивов и вывод их в файлы
-template<typename T>
-void creating_arrays(int size, double max, double step, bool _2nd_task);
+template<typename ARRAY_TYPE, typename TYPE_OF_TIME = chrono::nanoseconds>
+void creating_arrays(int size, double max, double x_step,
+	// (arr,size, x_step, func_num,  elapsed_ms)
+	void (*stage) (
+		ARRAY_TYPE* arr,
+		int size,
+		double x_step,
+		int func_num,
+		TYPE_OF_TIME elapsed_time
+		)
+);
+
+// функция обработки массивов для первого этапа работы
+template<typename ARRAY_TYPE, typename TYPE_OF_TIME = chrono::nanoseconds>
+void first_stage(
+	ARRAY_TYPE* arr,
+	int size,
+	double x_step,
+	int func_num,
+	TYPE_OF_TIME elapsed_time
+);
+
+// функция обработки массивов для второго этапа работы
+template<typename ARRAY_TYPE, typename TYPE_OF_TIME = chrono::microseconds>
+void second_stage(
+	ARRAY_TYPE* arr,
+	int size,
+	double x_step,
+	int func_num,
+	TYPE_OF_TIME elapsed_time
+);
 
 // решение первой задачи
 // массивы размером от 150 до 200
@@ -203,7 +248,7 @@ void f4(T* arr, int size, double max, double step)
 template<typename T>
 void f5(T* arr, int size, double max, double step)
 {
-	T x_scale = 1;	// масштабирование по x
+	T x_scale = 0.5;	// масштабирование по x
 	T x_shift = 0;	// сдвиг по х
 	T y_scale = max;	// мастабирование по y
 	double x = 0.0;	// координата x
@@ -221,7 +266,7 @@ void f6(T* arr, int size, double max, double step)
 	int count_of_step = 5;						// количество ступеней
 	double step_height = max / count_of_step;	// высота одной ступени
 	int step_length = ceil(size * step);		// длина одной ступени
-	double rand_value = max / 10.0;				// значение для создания шума
+	double rand_value = max / 20.0;				// значение для создания шума
 	double x = 0.0;								// координата x
 
 	// координата x увеличивается на step_height (высоту шага),
@@ -232,7 +277,6 @@ void f6(T* arr, int size, double max, double step)
 		arr[i] = x + rand_double(-rand_value, rand_value);
 	}
 }
-
 
 // печать массива в поток
 template<typename T>
@@ -279,21 +323,16 @@ void first_task()
 	{
 		// если был выбран int
 	case 1:
-		creating_arrays<int>(size, max_value, x_step, 0);
+		creating_arrays<int>(size, max_value, x_step, first_stage);
 		break;
 
 		// если был выбран double
 	case 2:
-		creating_arrays<double>(size, max_value, x_step, 0);
+		creating_arrays<double>(size, max_value, x_step, first_stage);
 		break;
 	}
 
 	// отрисовка графиков
-	/*GraphsDrawer gd;
-	gd.window_active(0);
-	sf::Thread thread(&GraphsDrawer::run, &gd);
-	thread.launch();*/
-
 	GraphsDrawer gd;
 	gd.run();
 
@@ -310,11 +349,6 @@ void second_task()
 		"\nВыберите тип данных массива [1,2]:\n\t1.int\n\t2.double\n",
 		"Должна быть введена 1 или 2\n");
 
-	// размер массива, вводится через консоль
-	int size = input_and_check(500000, 5000000,
-		"\nВведите размер массива [500000,5000000]:\n",
-		"Должно быть введено значение в интервале [500000,5000000]\n");
-
 	double max_value = input_and_check(10, 1000,
 		"\nВведите максимальное значение по оси y [10,1000]:\n",
 		"Должно быть введено значение в интервале [10,1000]\n"
@@ -324,21 +358,28 @@ void second_task()
 		"\nВведите величину шага по x [0.01, 10]:\n",
 		"Должно быть введено значение в интервале [0.01, 10] через точку, а не запятую\n"
 	);
-
-	// выбор типа массива
-	switch (type)
+	cout << "Длина последовательности |f1 мкС |f2 мкС |f3 мкС |f4 мкС |f5 мкС |f6 мкС |\n";
+	for (int size = 500000; size <= 5000000; size += 500000)
 	{
-		// если был выбран int
-	case 1:
-		creating_arrays<int>(size, max_value, x_step, 1);
-		break;
+		cout << fixed << setfill(' ') << setw(25) << size << "|";
+		switch (type)
+		{
+			// если был выбран int
+		case 1:
+			creating_arrays<int, chrono::microseconds>(
+				size, max_value, x_step,
+				second_stage);
+			break;
 
-		// если был выбран double
-	case 2:
-		creating_arrays<double>(size, max_value, x_step, 1);
-		break;
+			// если был выбран double
+		case 2:
+			creating_arrays<double, chrono::microseconds>(
+				size, max_value, x_step,
+				second_stage);
+			break;
+		}
+		cout << endl;
 	}
-
 	cout << "== КОНЕЦ ВТОРОГО ЭТАПА ==\n";
 }
 
@@ -367,37 +408,31 @@ T input_and_check(T min, T max,
 }
 
 // создание массивов и вывод их в файлы
-template<typename T>
-void creating_arrays(int size, double max, double x_step, bool _2nd_task)
+template<typename ARRAY_TYPE, typename TYPE_OF_TIME = chrono::nanoseconds>
+void creating_arrays(int size, double max, double x_step,
+	void (*stage) (
+		ARRAY_TYPE* arr,
+		int size,
+		double x_step,
+		int func_num,
+		TYPE_OF_TIME elapsed_time
+		)
+)
 {
-	// массивы
-	T* arr = new T[size];
+	// массив
+	ARRAY_TYPE* arr = new ARRAY_TYPE[size];
 
 	// массив указателей на функции
 	void (*funcs[])(
-		T * arr,		// массив
+		ARRAY_TYPE * arr,		// массив
 		int size,		// размер массива
 		double max_y,	// максимальное значение по y
 		double x_step	// шаг по x
 		) = { f1,f2,f3,f4,f5,f6 };
 
-	// имена файлов
-	const char name_of_file[6][13] =
-	{
-		"files/f1.txt",
-		"files/f2.txt",
-		"files/f3.txt",
-		"files/f4.txt",
-		"files/f5.txt",
-		"files/f6.txt"
-	};
-
 	// запуск всех функций
 	for (int i = 0; i < 6; i++)
 	{
-		// файл вывода данных
-		ofstream out(name_of_file[i]);
-
 		// начало отсчета времени
 		auto begin = std::chrono::steady_clock::now();
 
@@ -408,20 +443,51 @@ void creating_arrays(int size, double max, double x_step, bool _2nd_task)
 		auto end = std::chrono::steady_clock::now();
 
 		// вывод в консоль времени работы программы
-		auto elapsed_ms = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
-		cout << "\tВремя выполнения " << i + 1 << " функции = " <<
-			fixed << setw(5) << elapsed_ms.count() << " (нс)\n";
+		auto elapsed_ms = std::chrono::duration_cast<TYPE_OF_TIME>(end - begin);
 
-		// печать массива в файл
-		if (!_2nd_task)
-			print_arr(arr, size, x_step, out);
-
-
-		// закрытие файлового потока
-		out.close();
+		// вызов функции 
+		stage(arr, size, x_step, i, elapsed_ms);
 	}
 
 	// очистка памяти, занимаемой массивом
 	delete[] arr;
+}
+
+// функция обработки массивов для первого этапа работы
+template<typename ARRAY_TYPE, typename TYPE_OF_TIME = chrono::nanoseconds>
+void first_stage(
+	ARRAY_TYPE* arr,
+	int size,
+	double x_step,
+	int func_num,
+	TYPE_OF_TIME elapsed_time
+)
+{
+	// печать времени формирования последовательности
+	cout << "\tВремя выполнения " << func_num + 1 << " функции = " <<
+		fixed << setw(5) << elapsed_time.count() << " (нс)\n";
+
+	// создание определенного файлового потока
+	ofstream out(name_of_file[func_num]);
+
+	// печать массива в файл
+	print_arr(arr, size, x_step, out);
+
+	// закрытие файлового потока
+	out.close();
+
+}
+
+// функция обработки массивов для второго этапа работы
+template<typename ARRAY_TYPE, typename TYPE_OF_TIME = chrono::microseconds>
+void second_stage(
+	ARRAY_TYPE* arr,
+	int size,
+	double x_step,
+	int func_num,
+	TYPE_OF_TIME elapsed_time
+)
+{
+	cout << fixed << setfill(' ') << setw(6) << elapsed_time.count() << " |";
 }
 /**************** End Of main.cpp File ***************/
