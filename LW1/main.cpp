@@ -7,7 +7,7 @@
 *	Language     : c/c++												*
 *	Programmers  : Плоцкий Б.А. Раужев Ю. М.							*
 *	Created      :  12/09/22											*
-*	Last revision:  19/09/22											*
+*	Last revision:  25/09/22											*
 *	Comment(s)   : 														*
 *																		*
 *	1 этап работы														*
@@ -169,7 +169,7 @@ int main()
 	first_task();
 
 	// выполнение второго этапа
-	//second_task();
+	second_task();
 
 	return 0;
 }
@@ -311,11 +311,13 @@ void first_task()
 		"\nВведите размер массива [150,200]:\n",
 		"Должно быть введено значение в интервале [150,200]\n");
 
+	// максимальное значение функции
 	double max_value = input_and_check(10, 1000,
 		"\nВведите максимальное значение по оси y [10,1000]:\n",
 		"Должно быть введено значение в интервале [10,1000]\n"
 	);
 
+	// шаг по оси х
 	double x_step = input_and_check(0.01, 10.0,
 		"\nВведите величину шага по x [0.01, 10]:\n",
 		"Должно быть введено значение в интервале [0.01, 10] через точку, а не запятую\n"
@@ -352,19 +354,28 @@ void second_task()
 		"\nВыберите тип данных массива [1,2]:\n\t1.int\n\t2.double\n",
 		"Должна быть введена 1 или 2\n");
 
+	// максимальное значение функции
 	double max_value = input_and_check(10, 1000,
 		"\nВведите максимальное значение по оси y [10,1000]:\n",
 		"Должно быть введено значение в интервале [10,1000]\n"
 	);
 
+	// шаг по оси х
 	double x_step = input_and_check(0.01, 10.0,
 		"\nВведите величину шага по x [0.01, 10]:\n",
 		"Должно быть введено значение в интервале [0.01, 10] через точку, а не запятую\n"
 	);
+
+	// вывод шапки таблицы
 	cout << "Длина последовательности |f1 мкС |f2 мкС |f3 мкС |f4 мкС |f5 мкС |f6 мкС |\n";
+
+	// создание массивов разных размеров
 	for (int size = 500000; size <= 5000000; size += 500000)
 	{
+		// печать текущего размера массива
 		cout << fixed << setfill(' ') << setw(25) << size << "|";
+
+		// выбор типа данных массива
 		switch (type)
 		{
 			// если был выбран int
@@ -381,6 +392,7 @@ void second_task()
 				second_stage);
 			break;
 		}
+		// перенос строки
 		cout << endl;
 	}
 	cout << "== КОНЕЦ ВТОРОГО ЭТАПА ==\n";
@@ -393,18 +405,25 @@ T input_and_check(T min, T max,
 {
 	// размер массива
 	T num;
+
+	// вывод сообщения
 	cout << welcome_str;
 	cin >> num;
 
 	// если было введено не то
 	if (num > max || num < min) {
 		// если была введена не цифра
-		if (cin.fail()) {
+		if (cin.fail())
+		{
 			cin.clear();
 			cin.ignore(INT_MAX, '\n');
 		}
+
+		// отчистка консоли
 		system("cls");
 		cout << err_str;
+
+		// рекурсивное обращение
 		num = input_and_check(min, max, welcome_str, err_str);
 	}
 	return num;
@@ -413,12 +432,12 @@ T input_and_check(T min, T max,
 // создание массивов и вывод их в файлы
 template<typename ARRAY_TYPE, typename TYPE_OF_TIME = chrono::nanoseconds>
 void creating_arrays(int size, double max, double x_step,
-	void (*stage) (
-		ARRAY_TYPE* arr,
-		int size,
-		double x_step,
-		int func_num,
-		TYPE_OF_TIME elapsed_time
+	void (*stage) (		// функция, которая выводит данные
+		ARRAY_TYPE* arr,			// массив
+		int size,					// размер массива
+		double x_step,				// шаг по оси х
+		int func_num,				// номер функции
+		TYPE_OF_TIME elapsed_time	// тип времени (нс или мкС)
 		)
 )
 {
@@ -428,9 +447,9 @@ void creating_arrays(int size, double max, double x_step,
 	// массив указателей на функции
 	void (*funcs[])(
 		ARRAY_TYPE * arr,		// массив
-		int size,		// размер массива
-		double max_y,	// максимальное значение по y
-		double x_step	// шаг по x
+		int size,				// размер массива
+		double max_y,			// максимальное значение по y
+		double x_step			// шаг по x
 		) = { f1,f2,f3,f4,f5,f6 };
 
 	// запуск всех функций
@@ -458,12 +477,12 @@ void creating_arrays(int size, double max, double x_step,
 
 // функция обработки массивов для первого этапа работы
 template<typename ARRAY_TYPE, typename TYPE_OF_TIME = chrono::nanoseconds>
-void first_stage(
-	ARRAY_TYPE* arr,
-	int size,
-	double x_step,
-	int func_num,
-	TYPE_OF_TIME elapsed_time
+void first_stage(		// функция, которая выводит данные
+	ARRAY_TYPE* arr,			 // массив
+	int size,					 // размер массива
+	double x_step,				 // шаг по оси х
+	int func_num,				 // номер функции
+	TYPE_OF_TIME elapsed_time	 // тип времени (нс или мкС)
 )
 {
 	// печать времени формирования последовательности
@@ -483,14 +502,15 @@ void first_stage(
 
 // функция обработки массивов для второго этапа работы
 template<typename ARRAY_TYPE, typename TYPE_OF_TIME = chrono::microseconds>
-void second_stage(
-	ARRAY_TYPE* arr,
-	int size,
-	double x_step,
-	int func_num,
-	TYPE_OF_TIME elapsed_time
+void second_stage(		// функция, которая выводит данные
+	ARRAY_TYPE* arr,			   // массив
+	int size,					   // размер массива
+	double x_step,				   // шаг по оси х
+	int func_num,				   // номер функции
+	TYPE_OF_TIME elapsed_time	   // тип времени (нс или мкС)
 )
 {
+	// печать времени формирования последовательности
 	cout << fixed << setfill(' ') << setw(6) << elapsed_time.count() << " |";
 }
 /**************** End Of main.cpp File ***************/
